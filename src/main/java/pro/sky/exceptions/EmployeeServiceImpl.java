@@ -9,34 +9,31 @@ public class EmployeeServiceImpl implements EmployeeService{
 
 
     @Override
-    public boolean addEmployee(String firstName, String lastName) {
+    public Employee addEmployee(String firstName, String lastName) {
             for (int i = 0; i < employees.length; i++) {
                 if (employees[i] == null) {
                     employees[i] = new Employee (firstName, lastName);
-                    return true;
                 }
             }
         throw new OverFlowEmployeeExceptions();
     }
 
     @Override
-    public boolean deleteEmployee(String firstName, String lastName) {
+    public Employee removeEmployee(String firstName, String lastName) {
         for (int i = 0; i < employees.length; i++) {
             if (employees[i] == new Employee (firstName, lastName)) {
                 employees[i] = null;
-                return true;
             }
         }
-        throw new NotFoundEmployeeExceptions();
+        throw new NotFoundEmployeeException();
     }
 
     @Override
-    public boolean findEmployee(String firstName, String lastName) {
+    public Employee findEmployee(String firstName, String lastName) {
         for (int i = 0; i < employees.length; i++) {
             if (employees[i] == new Employee (firstName, lastName)) {
-               return true;
             }
         }
-        throw new NotFoundEmployeeExceptions();
+        throw new NotFoundEmployeeException();
     }
 }

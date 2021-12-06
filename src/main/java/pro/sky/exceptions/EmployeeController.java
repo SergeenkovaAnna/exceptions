@@ -21,8 +21,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/remove")
-    public String delete(@RequestParam String firstName, @RequestParam String lastName) {
-        Employee result = employeeService.deleteEmployee(firstName, lastName);
+    public String remove(@RequestParam String firstName, @RequestParam String lastName) {
+        Employee result = employeeService.removeEmployee(firstName, lastName);
         return message(result, "удален");
     }
 
