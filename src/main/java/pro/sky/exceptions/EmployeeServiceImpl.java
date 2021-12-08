@@ -16,7 +16,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                     return employees[i];
                 }
             }
-        throw new OverFlowEmployeeExceptions();
+        throw new OverFlowEmployeeException();
     }
 
     @Override
