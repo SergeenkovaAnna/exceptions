@@ -6,17 +6,16 @@ import pro.sky.exceptions.exceptions.NotFoundEmployeeException;
 import pro.sky.exceptions.exceptions.OverFlowEmployeeException;
 import pro.sky.exceptions.service.EmployeeService;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-        private final Set<Employee> employees;
+        private final Map<String, Employee> employees;
 
-    public EmployeeServiceImpl(Set<Employee> employees) {
-        this.employees = employees;
+    public EmployeeServiceImpl() {
+        employees = new LinkedHashMap<>();
     }
 
 
@@ -29,10 +28,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(Employee employee) {
-        if (!employees.add(employee)) {
+        String key = getKey(employee);
+        if (employees.containsKey(key)) {
             throw new OverFlowEmployeeException();
         }
+        employees.put(key, employee);
         return employee;
+    }
+
+    private String getKey(Employee employee) {
+        return getKey(employee.getFirstName(), employee.getLastName());
+    }
+
+    private String getKey(String firstName, String lastName) {
+        return firstName + " " + lastName;
     }
 
     @Override
@@ -43,7 +52,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee removeEmployee(Employee employee) {
-        if (!employees.remove(employee)) {
+        Employee deletedValue = employees.remove(getKey(employee));
+        if (deletedValue == null) {
             throw new NotFoundEmployeeException();
         }
         return employee;
@@ -51,8 +61,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
+        String key = getKey(firstName, lastName);
+        Employee employee = employees.get(key);
+        if (employees == null) {
            throw new NotFoundEmployeeException();
         }
         return employee;
@@ -60,6 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Collection<Employee> getAllEmployees() {
-        return Set.copyOf(employees);
+
+        return Set.copyOf(employees.values());
     }
 }
