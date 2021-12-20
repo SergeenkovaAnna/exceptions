@@ -63,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findEmployee(String firstName, String lastName) {
         String key = getKey(firstName, lastName);
         Employee employee = employees.get(key);
-        if (employees == null) {
+        if (employee == null) {
            throw new NotFoundEmployeeException();
         }
         return employee;
