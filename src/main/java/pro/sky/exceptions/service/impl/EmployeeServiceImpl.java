@@ -20,7 +20,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public Employee addEmployee(String firstName, String lastName) {
+    public Employee addEmployee(String firstName, String lastName, int departmentId, int salary) {
         Employee newEmloyee = new Employee(firstName, lastName);
         return addEmployee(newEmloyee);
 
@@ -54,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee removeEmployee(Employee employee) {
         Employee deletedValue = employees.remove(getKey(employee));
         if (deletedValue == null) {
-            throw new NotFoundEmployeeException();
+            throw new NotFoundEmployeeException("Работник отдела " + departmentId + " не найден");
         }
         return employee;
     }
@@ -64,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         String key = getKey(firstName, lastName);
         Employee employee = employees.get(key);
         if (employee == null) {
-           throw new NotFoundEmployeeException();
+           throw new NotFoundEmployeeException("Работник отдела " + departmentId + " не найден");
         }
         return employee;
     }

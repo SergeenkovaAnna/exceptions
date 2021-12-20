@@ -5,7 +5,7 @@ import pro.sky.exceptions.data.Employee;
 import java.util.Collection;
 
 public interface EmployeeService {
-   Employee addEmployee (String firstName, String lastName);
+   Employee addEmployee (String firstName, String lastName, int departmentId, int salary);
 
    Employee addEmployee (Employee employee);
 
