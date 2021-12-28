@@ -1,7 +1,9 @@
 package pro.sky.exceptions.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.sky.exceptions.data.Employee;
+import pro.sky.exceptions.exceptions.BadRequestException;
 import pro.sky.exceptions.exceptions.NotFoundEmployeeException;
 import pro.sky.exceptions.exceptions.OverFlowEmployeeException;
 import pro.sky.exceptions.service.EmployeeService;
@@ -21,8 +23,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(String firstName, String lastName, int departmentId, int salary) {
-        Employee newEmloyee = new Employee(firstName, lastName);
-        return addEmployee(newEmloyee);
+        Employee newEmployee = new Employee(firstName, lastName);
+        StringUtils.isAlpha((CharSequence) newEmployee);
+        return addEmployee(newEmployee);
 
     }
 
@@ -32,8 +35,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employees.containsKey(key)) {
             throw new OverFlowEmployeeException();
         }
-        employees.put(key, employee);
+        isNotAlpha();
+        employees.put(StringUtils.capitalize(key), employee);
         return employee;
+    }
+
+    private void isNotAlpha() {
+        if (!StringUtils.isAlpha((CharSequence) employees)) {
+            throw new BadRequestException("Не корректные данные");
+        }
     }
 
     private String getKey(Employee employee) {
@@ -47,6 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
         Employee newEmployee = new Employee(firstName, lastName);
+        StringUtils.isAlpha((CharSequence) newEmployee);
         return removeEmployee(newEmployee);
     }
 
@@ -54,8 +65,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee removeEmployee(Employee employee) {
         Employee deletedValue = employees.remove(getKey(employee));
         if (deletedValue == null) {
-            throw new NotFoundEmployeeException("Работник отдела " + departmentId + " не найден");
+            throw new NotFoundEmployeeException("Работник отдела " + employee.getDepartmentId() + " не найден");
         }
+        isNotAlpha();
         return employee;
     }
 
@@ -64,8 +76,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         String key = getKey(firstName, lastName);
         Employee employee = employees.get(key);
         if (employee == null) {
-           throw new NotFoundEmployeeException("Работник отдела " + departmentId + " не найден");
+           throw new NotFoundEmployeeException("Работник отдела " + employee.getDepartmentId() + " не найден");
         }
+        isNotAlpha();
         return employee;
     }
 
