@@ -24,9 +24,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee addEmployee(String firstName, String lastName, int departmentId, int salary) {
         Employee newEmployee = new Employee(firstName, lastName);
-        StringUtils.isAlpha((CharSequence) newEmployee);
-        return addEmployee(newEmployee);
-
+        if (StringUtils.isAlpha(firstName) & StringUtils.isAlpha(lastName)) {
+            return addEmployee(newEmployee);
+        }
+        return addEmployee(firstName,lastName, departmentId, salary);
     }
 
     @Override
