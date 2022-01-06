@@ -24,25 +24,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee addEmployee(String firstName, String lastName, int departmentId, int salary) {
         Employee newEmployee = new Employee(firstName, lastName);
-        if (StringUtils.isAlpha(firstName) & StringUtils.isAlpha(lastName)) {
+        if (StringUtils.isAlpha(firstName) && StringUtils.isAlpha(lastName)) {
             return addEmployee(newEmployee);
+        } else {
+            throw new BadRequestException("Не корректные данные");
         }
-        return addEmployee(firstName,lastName, departmentId, salary);
     }
 
     @Override
     public Employee addEmployee(Employee employee) {
         String key = getKey(employee);
+        isNotAlpha(employee.getFirstName(), employee.getLastName());
         if (employees.containsKey(key)) {
             throw new OverFlowEmployeeException();
         }
-        isNotAlpha();
         employees.put(StringUtils.capitalize(key), employee);
         return employee;
     }
 
-    private void isNotAlpha() {
-        if (!StringUtils.isAlpha((CharSequence) employees)) {
+    private void isNotAlpha(String firstName, String lastName) {
+        if (!StringUtils.isAlpha(firstName) && !StringUtils.isAlpha(lastName)) {
             throw new BadRequestException("Не корректные данные");
         }
     }
@@ -58,17 +59,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
         Employee newEmployee = new Employee(firstName, lastName);
-        StringUtils.isAlpha((CharSequence) newEmployee);
+        isNotAlpha(firstName, lastName);
         return removeEmployee(newEmployee);
     }
 
     @Override
     public Employee removeEmployee(Employee employee) {
         Employee deletedValue = employees.remove(getKey(employee));
+        isNotAlpha(employee.getFirstName(), employee.getLastName());
         if (deletedValue == null) {
             throw new NotFoundEmployeeException("Работник отдела " + employee.getDepartmentId() + " не найден");
         }
-        isNotAlpha();
         return employee;
     }
 
@@ -79,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employee == null) {
            throw new NotFoundEmployeeException("Работник отдела " + employee.getDepartmentId() + " не найден");
         }
-        isNotAlpha();
+        isNotAlpha(firstName, lastName);
         return employee;
     }
 
