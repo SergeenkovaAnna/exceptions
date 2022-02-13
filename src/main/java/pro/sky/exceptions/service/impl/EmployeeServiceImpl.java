@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import pro.sky.exceptions.data.Employee;
 import pro.sky.exceptions.exceptions.BadRequestException;
 import pro.sky.exceptions.exceptions.NotFoundEmployeeException;
-import pro.sky.exceptions.exceptions.OverFlowEmployeeException;
+import pro.sky.exceptions.exceptions.EmployeeAlreadyExistException;
 import pro.sky.exceptions.service.EmployeeService;
 
 import java.util.*;
@@ -23,27 +23,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(String firstName, String lastName, int departmentId, int salary) {
-        Employee newEmployee = new Employee(firstName, lastName);
-        if (StringUtils.isAlpha(firstName) && StringUtils.isAlpha(lastName)) {
-            return addEmployee(newEmployee);
-        } else {
-            throw new BadRequestException("Не корректные данные");
-        }
+        checkIfParametersCorrect(firstName, lastName, departmentId);
+        Employee newEmployee = new Employee(firstName, lastName, departmentId, salary);
+        return addEmployee(newEmployee);
     }
 
     @Override
     public Employee addEmployee(Employee employee) {
         String key = getKey(employee);
-        isNotAlpha(employee.getFirstName(), employee.getLastName());
+        checkIfParametersCorrect(employee.getFirstName(), employee.getLastName(), employee.getDepartmentId());
         if (employees.containsKey(key)) {
-            throw new OverFlowEmployeeException();
+            throw new EmployeeAlreadyExistException();
         }
         employees.put(StringUtils.capitalize(key), employee);
         return employee;
     }
 
-    private void isNotAlpha(String firstName, String lastName) {
-        if (!StringUtils.isAlpha(firstName) && !StringUtils.isAlpha(lastName)) {
+    private void checkIfParametersCorrect(String firstName, String lastName, int departmentId) {
+        if (!StringUtils.isAlpha(firstName) || !StringUtils.isAlpha(lastName) || departmentId <= 0) {
+            throw new BadRequestException("Не корректные данные");
+        }
+    }
+
+    private void checkIfParametersCorrect(String firstName, String lastName) {
+        if (!StringUtils.isAlpha(firstName) || !StringUtils.isAlpha(lastName)) {
             throw new BadRequestException("Не корректные данные");
         }
     }
@@ -59,18 +62,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
         Employee newEmployee = new Employee(firstName, lastName);
-        isNotAlpha(firstName, lastName);
+        checkIfParametersCorrect(firstName, lastName);
         return removeEmployee(newEmployee);
     }
 
-    @Override
-    public Employee removeEmployee(Employee employee) {
-        Employee deletedValue = employees.remove(getKey(employee));
-        isNotAlpha(employee.getFirstName(), employee.getLastName());
-        if (deletedValue == null) {
+
+    private Employee removeEmployee(Employee employee) {
+        Employee deletedEmployee = employees.remove(getKey(employee));
+        if (deletedEmployee == null) {
             throw new NotFoundEmployeeException("Работник отдела " + employee.getDepartmentId() + " не найден");
         }
-        return employee;
+        return deletedEmployee;
     }
 
     @Override
@@ -78,9 +80,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         String key = getKey(firstName, lastName);
         Employee employee = employees.get(key);
         if (employee == null) {
-           throw new NotFoundEmployeeException("Работник отдела " + employee.getDepartmentId() + " не найден");
+           throw new NotFoundEmployeeException("Работник отдела не найден");
         }
-        isNotAlpha(firstName, lastName);
+        checkIfParametersCorrect(firstName, lastName);
         return employee;
     }
 

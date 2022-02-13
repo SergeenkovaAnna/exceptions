@@ -11,8 +11,6 @@ public interface EmployeeService {
 
    Employee removeEmployee (String firstName, String lastName);
 
-   Employee removeEmployee (Employee employee);
-
    Employee findEmployee (String firstName, String lastName);
 
    Collection<Employee> getAllEmployees();
