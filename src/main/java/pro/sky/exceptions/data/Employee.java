@@ -9,6 +9,7 @@ public class Employee {
     private int salary;
 
     public Employee(String firstName, String lastName) {
+
         this(firstName, lastName, 0, 0);
     }
 
