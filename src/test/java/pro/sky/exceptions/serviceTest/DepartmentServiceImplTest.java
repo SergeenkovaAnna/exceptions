@@ -12,6 +12,8 @@ import pro.sky.exceptions.service.impl.DepartmentServiceImpl;
 import pro.sky.exceptions.service.impl.EmployeeServiceImpl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,10 +32,13 @@ public class DepartmentServiceImplTest {
 
     Employee employeeActual_1 = new Employee (LASTNAME_1, FIRSTNAME_1, DEPARTMENT_1, SALARY_1);
     Employee employeeActual_2 = new Employee (LASTNAME_3, FIRSTNAME_3, DEPARTMENT_1, SALARY_3);
+    Employee employeeActual_3 = new Employee (LASTNAME_2, FIRSTNAME_2, DEPARTMENT_2, SALARY_2);
+
+
 
     @BeforeEach
     public void startNew() {
-       Collection<Employee> allEmployees = Set.of(employeeActual_1, employeeActual_2);
+       Collection<Employee> allEmployees = Set.of(employeeActual_1, employeeActual_2, employeeActual_3);
        when(employeeService.getAllEmployees()).thenReturn(allEmployees);
     }
 
@@ -59,10 +64,10 @@ public class DepartmentServiceImplTest {
 
     @Test
     void getEmployeesForTest() {
-        Employee employeeActual_1 = employeeService.addEmployee(LASTNAME_2, FIRSTNAME_2, DEPARTMENT_2, SALARY_2);
-        Employee employeeActual_2 = employeeService.addEmployee(LASTNAME_3, FIRSTNAME_3, DEPARTMENT_2, SALARY_3 );
-        Employee employeeActual_3 = employeeService.addEmployee(LASTNAME_1, FIRSTNAME_1, DEPARTMENT_1, SALARY_1 );
-        Collection<Employee> allEmployeesAtDepartment = out.getEmployeesFor(DEPARTMENT_2);
+//        Employee employeeActual_1 = employeeService.addEmployee(LASTNAME_2, FIRSTNAME_2, DEPARTMENT_2, SALARY_2);
+//        Employee employeeActual_2 = employeeService.addEmployee(LASTNAME_3, FIRSTNAME_3, DEPARTMENT_2, SALARY_3 );
+//        Employee employeeActual_3 = employeeService.addEmployee(LASTNAME_1, FIRSTNAME_1, DEPARTMENT_1, SALARY_1 );
+        Collection<Employee> allEmployeesAtDepartment = out.getEmployeesFor(DEPARTMENT_1);
         Collection<Employee> expectedEmployees = Set.of(employeeActual_1, employeeActual_2);
         assertTrue(expectedEmployees.containsAll(allEmployeesAtDepartment)
           && allEmployeesAtDepartment.containsAll(expectedEmployees)
@@ -72,9 +77,12 @@ public class DepartmentServiceImplTest {
 
     @Test
     void getAllEmployeesByDepartmentTest() {
-        Collection<Employee> actual = (Collection<Employee>) out.getAllEmployeesByDepartment();
+        Map<Integer, List<Employee>> actual = out.getAllEmployeesByDepartment();
         Collection<Employee> expected = Set.of(employeeActual_1, employeeActual_2);
-        assertEquals(expected.size(), actual.size());
+        assertTrue(expected.containsAll(expected)
+                && expected.containsAll(expected)
+                && expected.size()
+                == actual.get(DEPARTMENT_1).size());
     }
 
 }

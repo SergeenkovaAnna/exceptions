@@ -13,7 +13,6 @@ public interface EmployeeServiceImplConstantForTest {
 
     String LASTNAME_3 = "Сидоров";
     String FIRSTNAME_3 = "Валентин";
-    int DEPARTMENT_3 = 2;
     int SALARY_3 = 60_000;
 
     String ILLEGAL_LASTNAME = "Иванов1";
